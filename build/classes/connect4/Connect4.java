@@ -44,10 +44,6 @@ public class Connect4 extends JFrame implements Runnable {
     }
     WinDirection winDirection;    
     int piecesOnBoard;
-    int connectWhat = 4;
-    
-       int player1Score = 0;
-       int player2Score = 0;
     
     static Connect4 frame1;
     public static void main(String[] args) {
@@ -84,9 +80,9 @@ public class Connect4 extends JFrame implements Runnable {
                     if (currentRow >= 0)
                     {
                         if (playerOnesTurn)
-                            board[currentRow][currentColumn] = new Piece(Color.red, (int)((Math.random() * 3) + 1));
+                            board[currentRow][currentColumn] = new Piece(Color.red);
                         else
-                            board[currentRow][currentColumn] = new Piece(Color.black, (int)((Math.random() * 3) + 1));
+                            board[currentRow][currentColumn] = new Piece(Color.black);
                         playerOnesTurn = !playerOnesTurn;
                         moveHappened = true;
                         piecesOnBoard++;
@@ -178,11 +174,11 @@ public class Connect4 extends JFrame implements Runnable {
 
         g.setColor(Color.gray);
 //horizontal lines
-//        for (int zi=1;zi<numRows;zi++)
-//        {
-//            g.drawLine(getX(0) ,getY(0)+zi*getHeight2()/numRows ,
-//            getX(getWidth2()) ,getY(0)+zi*getHeight2()/numRows );
-//        }
+        for (int zi=1;zi<numRows;zi++)
+        {
+            g.drawLine(getX(0) ,getY(0)+zi*getHeight2()/numRows ,
+            getX(getWidth2()) ,getY(0)+zi*getHeight2()/numRows );
+        }
 //vertical lines
         for (int zi=1;zi<numColumns;zi++)
         {
@@ -201,18 +197,10 @@ public class Connect4 extends JFrame implements Runnable {
                     getY(0)+zrow*getHeight2()/numRows,
                     getWidth2()/numColumns,
                     getHeight2()/numRows);
-                    g.setColor(Color.white);
-                    g.setFont(new Font("Monospaced",Font.BOLD,40) );
-                    g.drawString("" + board[zrow][zcolumn].getValue(), getX(0)+zcolumn*getWidth2()/numColumns+20, getY(0)+zrow*getHeight2()/numRows+30);   
                 }
             }
         }
-            g.setColor(Color.black);
-            g.setFont(new Font("Monospaced",Font.BOLD,20) );
-            g.drawString("Player 1 Score " + player1Score, 10, getY(0));     
-            
-            g.setFont(new Font("Monospaced",Font.BOLD,20) );
-            g.drawString("Player 2 Score " + player2Score, 300, getY(0));      
+    
         if (winState == WinState.PlayerOne)
         {
             g.setColor(Color.gray);
@@ -288,11 +276,10 @@ public class Connect4 extends JFrame implements Runnable {
 ////////////////////////////////////////////////////////////////////////////
     public boolean checkWin() {
 //check horizontal.
-        
-        int startColumn = currentColumn - (connectWhat - 1);
+        int startColumn = currentColumn - 3;
         if (startColumn < 0)
             startColumn = 0;
-        int endColumn = currentColumn + (connectWhat - 1);
+        int endColumn = currentColumn + 3;
         if (endColumn > numColumns-1)
             endColumn = numColumns - 1;
         int numMatch = 0;
@@ -301,10 +288,6 @@ public class Connect4 extends JFrame implements Runnable {
         {
             if (board[currentRow][col] != null && board[currentRow][col].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
-            else if(numMatch == connectWhat)
-            {
-                break;
-            }
             else
                 numMatch = 0;
             if (numMatch == 1)
@@ -314,35 +297,26 @@ public class Connect4 extends JFrame implements Runnable {
             }
         }
         
-        if (numMatch == connectWhat)
+        if (numMatch == 4)
         {
             if (board[currentRow][currentColumn].getColor() == Color.red)
                 winState = WinState.PlayerOne;
             else
                 winState = WinState.PlayerTwo;
             {
-                for (int howMany = 0; howMany<connectWhat;howMany++)
-                {
-                    board[winRow][winColumn+howMany].setColor(Color.blue);
-                    if(winState == WinState.PlayerOne )
-                    {
-                        player1Score += board[winRow][winColumn+howMany].getValue();
-                    }
-                    else if(winState == WinState.PlayerTwo )
-                    {
-                        player2Score += board[winRow][winColumn+howMany].getValue();
-                    }
-                }
-                
+                board[winRow][winColumn].setColor(Color.blue);
+                board[winRow][winColumn+1].setColor(Color.blue);
+                board[winRow][winColumn+2].setColor(Color.blue);
+                board[winRow][winColumn+3].setColor(Color.blue);
             }            
             return (true);
         }
         
 //check vertical.
-        int startRow = currentRow - (connectWhat - 1);
+        int startRow = currentRow - 3;
         if (startRow < 0)
             startRow = 0;
-        int endRow = currentRow + (connectWhat - 1);
+        int endRow = currentRow + 3;
         if (endRow > numRows-1)
             endRow = numRows - 1;
         numMatch = 0;
@@ -360,31 +334,23 @@ public class Connect4 extends JFrame implements Runnable {
             }            
         }
         
-        if (numMatch == (connectWhat))
+        if (numMatch == 4)
         {
             if (board[currentRow][currentColumn].getColor() == Color.red)
                 winState = WinState.PlayerOne;
             else
                 winState = WinState.PlayerTwo;
             {
-                for (int howMany = 0; howMany<connectWhat;howMany++)
-                {
-                board[winRow+howMany][winColumn].setColor(Color.blue);
-                if(winState == WinState.PlayerOne )
-                    {
-                        player1Score += board[winRow+howMany][winColumn].getValue();
-                    }
-                    else if(winState == WinState.PlayerTwo )
-                    {
-                        player2Score += board[winRow+howMany][winColumn].getValue();
-                    }
-                }
+                board[winRow][winColumn].setColor(Color.blue);
+                board[winRow+1][winColumn].setColor(Color.blue);
+                board[winRow+2][winColumn].setColor(Color.blue);
+                board[winRow+3][winColumn].setColor(Color.blue);
             }             
             return (true);
         }        
 //check diagonal right down.
-        startColumn = currentColumn - (connectWhat - 1);
-        startRow = currentRow - (connectWhat - 1);
+        startColumn = currentColumn - 3;
+        startRow = currentRow - 3;
         if (startColumn < 0 || startRow < 0)
         {
             if (startColumn < startRow)
@@ -398,8 +364,8 @@ public class Connect4 extends JFrame implements Runnable {
                 startRow = 0;
             }
         }
-        endColumn = currentColumn + (connectWhat - 1);
-        endRow = currentRow + (connectWhat - 1);
+        endColumn = currentColumn + 3;
+        endRow = currentRow + 3;
         if (endColumn > numColumns-1 || endRow > numRows-1)
         {
             if (endColumn > endRow)
@@ -430,33 +396,25 @@ public class Connect4 extends JFrame implements Runnable {
             row++;
         }
         
-        if (numMatch == (connectWhat))
+        if (numMatch == 4)
         {
             if (board[currentRow][currentColumn].getColor() == Color.red)
                 winState = WinState.PlayerOne;
             else
                 winState = WinState.PlayerTwo;
             {
-                for (int howMany = 0; howMany<connectWhat;howMany++)
-                {
-                board[winRow+howMany][winColumn+howMany].setColor(Color.blue);
-                 if(winState == WinState.PlayerOne )
-                    {
-                        player1Score += board[winRow+howMany][winColumn+howMany].getValue();
-                    }
-                    else if(winState == WinState.PlayerTwo )
-                    {
-                        player2Score += board[winRow+howMany][winColumn+howMany].getValue();
-                    }
-                }
+                board[winRow][winColumn].setColor(Color.blue);
+                board[winRow+1][winColumn+1].setColor(Color.blue);
+                board[winRow+2][winColumn+2].setColor(Color.blue);
+                board[winRow+3][winColumn+3].setColor(Color.blue);
             }            
             return (true);
         }
                 
  
 //check diagonal right up.
-        startColumn = currentColumn - (connectWhat - 1);
-        startRow = currentRow + (connectWhat - 1);
+        startColumn = currentColumn - 3;
+        startRow = currentRow + 3;
         if (startColumn < 0 || startRow > numRows-1)
         {
             if (startColumn < numRows - 1 - startRow)
@@ -470,8 +428,8 @@ public class Connect4 extends JFrame implements Runnable {
                 startRow = numRows - 1;
             }
         }
-        endRow = currentRow - (connectWhat - 1);
-        endColumn = currentColumn + (connectWhat - 1);
+        endRow = currentRow - 3;
+        endColumn = currentColumn + 3;
         if (endRow < 0 || endColumn > numColumns-1)
         {
             if (endRow < numColumns - 1 - endColumn)
@@ -492,9 +450,7 @@ public class Connect4 extends JFrame implements Runnable {
         {
             if (board[row][col] != null && board[row][col].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
-            else if (numMatch == connectWhat)
-                break;
-            else if (board[row][col] == null || board[row][col].getColor() != board[currentRow][currentColumn].getColor())
+            else
                 numMatch = 0;
             if (numMatch == 1)
             {
@@ -504,25 +460,17 @@ public class Connect4 extends JFrame implements Runnable {
             row--;
         }
         
-        if (numMatch == connectWhat)
+        if (numMatch == 4)
         {
             if (board[currentRow][currentColumn].getColor() == Color.red)
                 winState = WinState.PlayerOne;
             else
                 winState = WinState.PlayerTwo;
             {
-               for (int howMany = 0; howMany<connectWhat;howMany++)
-                {
-                board[winRow-howMany][winColumn+howMany].setColor(Color.blue);
-                 if(winState == WinState.PlayerOne )
-                    {
-                        player1Score += board[winRow-howMany][winColumn+howMany].getValue();
-                    }
-                    else if(winState == WinState.PlayerTwo )
-                    {
-                        player2Score += board[winRow-howMany][winColumn+howMany].getValue();
-                    }
-                }
+                board[winRow][winColumn].setColor(Color.blue);
+                board[winRow-1][winColumn+1].setColor(Color.blue);
+                board[winRow-2][winColumn+2].setColor(Color.blue);
+                board[winRow-3][winColumn+3].setColor(Color.blue);
             }            
             return (true);
         }

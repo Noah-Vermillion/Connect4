@@ -3,11 +3,9 @@ import java.awt.*;
 
 public class Piece {
     private Color color;
-    private int value;
-    Piece(Color _color, int _value)
+    Piece(Color _color)
     {
         color = _color;
-        value = _value;
     }
     Color getColor()
     {
@@ -16,13 +14,5 @@ public class Piece {
     void setColor(Color _color)
     {
         color = _color;
-    }  
-    int getValue()
-    {
-        return (value);
-    }
-    void setValue(int _value)
-    {
-        value = _value;
-    }  
+    }    
 }
