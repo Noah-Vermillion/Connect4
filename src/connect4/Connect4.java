@@ -94,7 +94,21 @@ public class Connect4 extends JFrame implements Runnable {
                 }
                 if (e.BUTTON3 == e.getButton()) {
                     //right button
-                    reset();
+                    int xpos = e.getX() - getX(0);
+                    int ypos = e.getY() - getY(0);
+                    if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
+                        return;
+//Calculate the width and height of each board square.
+                    int ydelta = getHeight2()/numRows;
+                    int xdelta = getWidth2()/numColumns;
+              
+                    if (currentRow >= 0)
+                    {
+                        board[currentRow][currentColumn].setColor(Color.pink);
+                        playerOnesTurn = !playerOnesTurn;
+                        moveHappened = true;
+//                        piecesOnBoard++;
+                    }
                 }
                 repaint();
             }
@@ -115,18 +129,12 @@ public class Connect4 extends JFrame implements Runnable {
         addKeyListener(new KeyAdapter() {
 
             public void keyPressed(KeyEvent e) {
-                if (e.VK_RIGHT == e.getKeyCode())
+                if (e.VK_ESCAPE == e.getKeyCode())
                 {
+                    reset();
                 }
-                if (e.VK_LEFT == e.getKeyCode())
-                {
-                }
-                if (e.VK_UP == e.getKeyCode())
-                {
-                }
-                if (e.VK_DOWN == e.getKeyCode())
-                {
-                }
+                
+               
 
                 repaint();
             }
@@ -299,7 +307,7 @@ public class Connect4 extends JFrame implements Runnable {
         
         for (int col = startColumn;numMatch != 4 && col<=endColumn;col++)
         {
-            if (board[currentRow][col] != null && board[currentRow][col].getColor() == board[currentRow][currentColumn].getColor())
+            if (board[currentRow][col] != null && board[currentRow][col].getColor() != Color.pink && board[currentRow][col].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
             else if(numMatch == connectWhat)
             {
@@ -349,7 +357,7 @@ public class Connect4 extends JFrame implements Runnable {
         
         for (int row = startRow;numMatch != 4 && row<=endRow;row++)
         {
-            if (board[row][currentColumn] != null && board[row][currentColumn].getColor() == board[currentRow][currentColumn].getColor())
+            if (board[row][currentColumn] != null && board[row][currentColumn].getColor() != Color.pink && board[row][currentColumn].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
             else
                 numMatch = 0;
@@ -418,7 +426,7 @@ public class Connect4 extends JFrame implements Runnable {
         int row = startRow;
         for (int col = startColumn;numMatch != 4 && col<=endColumn;col++)
         {
-            if (board[row][col] != null && board[row][col].getColor() == board[currentRow][currentColumn].getColor())
+            if (board[row][col] != null && board[row][col].getColor() != Color.pink && board[row][col].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
             else
                 numMatch = 0;
@@ -490,7 +498,7 @@ public class Connect4 extends JFrame implements Runnable {
         row = startRow;
         for (int col = startColumn;numMatch != 4 && col<=endColumn;col++)
         {
-            if (board[row][col] != null && board[row][col].getColor() == board[currentRow][currentColumn].getColor())
+            if (board[row][col] != null && board[row][col].getColor() != Color.pink && board[row][col].getColor() == board[currentRow][currentColumn].getColor())
                 numMatch++;
             else if (numMatch == connectWhat)
                 break;

@@ -9,6 +9,10 @@ public class Piece {
         color = _color;
         value = _value;
     }
+    Piece(Color _color)
+    {
+        color = _color;
+    }
     Color getColor()
     {
         return (color);
