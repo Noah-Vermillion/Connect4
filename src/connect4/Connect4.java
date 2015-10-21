@@ -48,6 +48,8 @@ public class Connect4 extends JFrame implements Runnable {
     
        int player1Score = 0;
        int player2Score = 0;
+       int player1MovesLeft = 5;
+       int player2MovesLeft = 5;
     
     static Connect4 frame1;
     public static void main(String[] args) {
@@ -101,13 +103,31 @@ public class Connect4 extends JFrame implements Runnable {
 //Calculate the width and height of each board square.
                     int ydelta = getHeight2()/numRows;
                     int xdelta = getWidth2()/numColumns;
-              
-                    if (currentRow >= 0)
+                    if (winState == WinState.None && player1MovesLeft > 0 && playerOnesTurn == true)
                     {
-                        board[currentRow][currentColumn].setColor(Color.pink);
-                        playerOnesTurn = !playerOnesTurn;
-                        moveHappened = true;
-//                        piecesOnBoard++;
+                        if (currentRow >= 0)
+                        {
+                            if(board[currentRow][currentColumn].getColor() != Color.pink)
+                            {
+                                board[currentRow][currentColumn].setColor(Color.pink);
+                                player1MovesLeft --;
+                                playerOnesTurn = !playerOnesTurn;
+                                moveHappened = true;
+                            }
+                        }
+                    }
+                    if (winState == WinState.None && player2MovesLeft > 0 && playerOnesTurn != true)
+                    {
+                        if (currentRow >= 0)
+                        {
+                            if(board[currentRow][currentColumn].getColor() != Color.pink)
+                            {
+                                board[currentRow][currentColumn].setColor(Color.pink);
+                                player2MovesLeft --;
+                                playerOnesTurn = !playerOnesTurn;
+                                moveHappened = true;
+                            }
+                        }
                     }
                 }
                 repaint();
@@ -205,13 +225,19 @@ public class Connect4 extends JFrame implements Runnable {
                 if (board[zrow][zcolumn] != null)
                 {
                     g.setColor(board[zrow][zcolumn].getColor());
-                    g.fillOval(getX(0)+zcolumn*getWidth2()/numColumns,
-                    getY(0)+zrow*getHeight2()/numRows,
-                    getWidth2()/numColumns,
-                    getHeight2()/numRows);
-                    g.setColor(Color.white);
+//                    g.fillOval(getX(0)+zcolumn*getWidth2()/numColumns,
+//                    getY(0)+zrow*getHeight2()/numRows,
+//                    getWidth2()/numColumns,
+//                    getHeight2()/numRows);
+                    int xvals[] = {getX(0)+zcolumn*getWidth2()/numColumns,getX(0)+zcolumn*getWidth2()/numColumns,getX(0)+zcolumn*getWidth2()/numColumns + getWidth2()/numColumns};
+                    int yvals[] = {getY(0)+zrow*getHeight2()/numRows,getY(0)+zrow*getHeight2()/numRows + getHeight2()/numRows,getY(0)+zrow*getHeight2()/numRows + getHeight2()/numRows};
+                    g.fillPolygon(xvals, yvals, xvals.length);
+                    if(board[zrow][zcolumn].getColor() != Color.pink)
+                    {
+                    g.setColor(Color.green);
                     g.setFont(new Font("Monospaced",Font.BOLD,40) );
-                    g.drawString("" + board[zrow][zcolumn].getValue(), getX(0)+zcolumn*getWidth2()/numColumns+20, getY(0)+zrow*getHeight2()/numRows+30);   
+                    g.drawString("" + board[zrow][zcolumn].getValue(), getX(0)+zcolumn*getWidth2()/numColumns+10, getY(0)+zrow*getHeight2()/numRows+50);   
+                    }
                 }
             }
         }
@@ -220,7 +246,13 @@ public class Connect4 extends JFrame implements Runnable {
             g.drawString("Player 1 Score " + player1Score, 10, getY(0));     
             
             g.setFont(new Font("Monospaced",Font.BOLD,20) );
-            g.drawString("Player 2 Score " + player2Score, 300, getY(0));      
+            g.drawString("Player 2 Score " + player2Score, 300, getY(0)); 
+            
+            g.setFont(new Font("Monospaced",Font.BOLD,15) );
+            g.drawString("Player 1 Moves Left " + player1MovesLeft, 10, getYNormal(0) + 15);     
+            
+            g.setFont(new Font("Monospaced",Font.BOLD,15) );
+            g.drawString("Player 2 Moves Left " + player2MovesLeft, 300, getYNormal(0) + 15);      
         if (winState == WinState.PlayerOne)
         {
             g.setColor(Color.gray);
@@ -272,6 +304,8 @@ public class Connect4 extends JFrame implements Runnable {
         moveHappened = false;
         winState = WinState.None;
         piecesOnBoard = 0;
+        player1MovesLeft = 5;
+        player2MovesLeft = 5;
     }
 /////////////////////////////////////////////////////////////////////////
     public void animate() {
